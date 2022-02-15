@@ -2,19 +2,22 @@ import * as api from './api.js'
 
 async function getTicketsForRelease() {
   const appVersion = process.argv.slice(2).join(' ')
-  const projectId = await getProjectIdFromVersionName(appVersion)
-  const issues = await getIssuesFromProjectId(projectId)
+  const versionId = await getVersionIdFromName(appVersion)
+  const issues = await getIssuesFromVersion(versionId)
+
   return issues;
 }
 
-async function getProjectIdFromVersionName(versionName: string): Promise<number> {
+async function getVersionIdFromName(versionName: string): Promise<string> {
   const projects = await api.projectFromVersionName(versionName)
-  return projects.values[0].projectId
+  const project = projects.values.find((project) =>  project.name === versionName)
+
+  return project.id
 } 
 
-async function getIssuesFromProjectId(projectId: number): 
+async function getIssuesFromVersion(versionNumber: string): 
   Promise<{ticket: string, summary: string, assignee: string }[]> {
-    const response = await api.issuesFromProjectId(projectId)
+    const response = await api.issuesFromProjectId(versionNumber)
     return response.issues.map((issue) => ({
       ticket: issue.key,
       summary: issue.fields.summary,

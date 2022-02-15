@@ -23,8 +23,8 @@ async function projectFromVersionName(versionName: string): Promise<ProjectRespo
   return request<ProjectResponse>(url)
 }
 
-async function issuesFromProjectId(projectId: number) {
-  const jql = `project = ${projectId} AND fixVersion = 10713 AND "Work Type[Dropdown]" = "Front End" ORDER BY priority DESC, key ASC&fields=assignee, summary`
+async function issuesFromProjectId(versionNumber: string) {
+  const jql = `project = 10048 AND fixVersion = ${versionNumber} AND "Work Type[Dropdown]" = "Front End" ORDER BY priority DESC, key ASC&fields=assignee, summary`
   const url = `${process.env.API_HOST}/search?jql=${jql}`
   return request<IssuesResponse>(url)
 }
